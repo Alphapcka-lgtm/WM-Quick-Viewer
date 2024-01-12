@@ -8,7 +8,7 @@ import statistics
 
 def get_items_dict(language: Language = Language.en):
     items_short = pywmapi.items.list_items(language)
-    items_short[0]
+    # TODO: add Lich and sister weapons
     items_dict = {item.item_name: item for item in items_short}
     return items_dict
 
