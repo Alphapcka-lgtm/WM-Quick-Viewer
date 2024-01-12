@@ -35,6 +35,7 @@ class PlotFrame(tk.Frame):
         self.axes.set_ylim(0)
         self.axes.grid(True)
         self.axes.set_visible(True)
+        self.axes.set_ylabel('Platin')
         self.canvas.draw()
 
     def hide_graph(self):
