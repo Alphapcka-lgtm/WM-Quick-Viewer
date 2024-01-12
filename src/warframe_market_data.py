@@ -12,10 +12,10 @@ def get_items_dict(language: Language = Language.en):
     items_dict = {item.item_name: item for item in items_short}
     return items_dict
 
-def get_item_statistic_48h(url_name: str):
+def request_item_statistic_48h(url_name: str):
     stats = pywmapi.statistics.get_statistic(url_name)
     if len(stats.closed_48h) == 0:
-        return None
+        return None, None
     date_prices: dict[datetime, list[float]] = {}
     for stat in stats.closed_48h:
         if stat.datetime in date_prices.keys():
@@ -27,13 +27,16 @@ def get_item_statistic_48h(url_name: str):
 
     return date_prices, date_median_price
 
-def get_item_price(url_name: str):
-    stats_tuple = get_item_statistic_48h(url_name)
-    if stats_tuple == None:
-        orders = pywmapi.orders.get_orders(url_name)
-        orders = list(filter(lambda order: order.user.status == UserShort.Status.ingame and order.order_type == OrderType.sell, orders))
-        prices_per_one = list(map(lambda order: order.platinum / order.quantity, orders))
-        return round(statistics.median(prices_per_one))
+def request_item_orders(url_name: str):
+    orders = pywmapi.orders.get_orders(url_name)
+    orders = list(filter(lambda order: order.order_type == OrderType.sell and order.user.status == UserShort.Status.ingame, orders))
+    orders = list(map(lambda order: order.platinum / order.quantity, orders))
+    return orders
+
+def item_price_from_statistics_or_order(url_name: str, date_median_price: dict[datetime, float]):
+    """Berechned den Preis des Items von der übergeben Statistik oder requestet alle Orders für das Item, sollte es keine Statistiken geben."""
+    if not date_median_price:
+        orders = request_item_orders(url_name)
+        return round(statistics.median(orders))
     
-    date_median_price = stats_tuple[1]
     return round(statistics.median(date_median_price.values()))
