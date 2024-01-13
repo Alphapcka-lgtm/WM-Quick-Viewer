@@ -96,7 +96,7 @@ class SelectFrame(tk.Frame):
             messagebox.showerror('Input Error', 'Error when converting multiplier.\nContinuing with a multiplier of 1.')
         selected_item = self.items_combo.get()
         item_short = self.items_dict[selected_item]
-        date_prices, date_median_price = warframe_market_data.request_item_statistic_48h(item_short.url_name)
+        date_median_price = warframe_market_data.request_item_statistic_48h(item_short.url_name)
         price_per_one = warframe_market_data.item_price_from_statistics_or_order(item_short.url_name, date_median_price)
 
         self.label_single_price.config(text=f'Durchschnittspreis pro item: {price_per_one} Platin')

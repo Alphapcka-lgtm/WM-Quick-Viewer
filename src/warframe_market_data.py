@@ -8,14 +8,14 @@ import statistics
 
 def get_items_dict(language: Language = Language.en):
     items_short = pywmapi.items.list_items(language)
-    # TODO: add Lich and sister weapons
+    # XXX: Add liches and sisters stuff?
     items_dict = {item.item_name: item for item in items_short}
     return items_dict
 
 def request_item_statistic_48h(url_name: str):
     stats = pywmapi.statistics.get_statistic(url_name)
     if len(stats.closed_48h) == 0:
-        return None, None
+        return None
     date_prices: dict[datetime, list[float]] = {}
     for stat in stats.closed_48h:
         if stat.datetime in date_prices.keys():
@@ -25,7 +25,7 @@ def request_item_statistic_48h(url_name: str):
     
     date_median_price = {date: statistics.median(prices) for date, prices in date_prices.items()}
 
-    return date_prices, date_median_price
+    return date_median_price
 
 def request_item_orders(url_name: str):
     orders = pywmapi.orders.get_orders(url_name)

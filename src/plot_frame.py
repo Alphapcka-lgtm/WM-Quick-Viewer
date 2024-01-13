@@ -3,8 +3,13 @@ from tkinter import Misc
 import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.backend_bases import PickEvent
 from matplotlib.figure import Figure
+from matplotlib.lines import Line2D
+from matplotlib.patches import Rectangle
+from matplotlib.text import Text
 from datetime import datetime
+import numpy as np
 
 
 class PlotFrame(tk.Frame):
@@ -30,13 +35,28 @@ class PlotFrame(tk.Frame):
         
         stats = [(date, price) for date, price in date_price.items()]
         dates, prices = zip(*stats)
-        self.axes.plot(dates, prices, marker='.')
+        self.axes.plot(dates, prices, marker='.', picker=5)
         self.axes.set_xlim(dates[0])
         self.axes.set_ylim(0)
         self.axes.grid(True)
         self.axes.set_visible(True)
         self.axes.set_ylabel('Platin')
+        self.canvas.mpl_connect('pick_event', self.on_pick)
         self.canvas.draw()
 
     def hide_graph(self):
-        self.update_graph(None, None)
+        self.update_graph(None)
+
+    def on_pick(plot, event: PickEvent):
+        print(type(event))
+        print(type(plot))
+        print(type(event.artist))
+        # print(isinstance(event.artist, Line2D))
+        # print(isinstance(event.artist, Rectangle))
+        # print(isinstance(event.artist, Text))
+        thisline = event.artist
+        xdata = thisline.get_xdata()
+        ydata = thisline.get_ydata()
+        ind = event.ind
+        print('onpick1 line:', list(zip(np.take(xdata, ind), np.take(ydata, ind))))
+        # print(f'on pick line: {xdata:.3f}, {ydata:.3f}')
