@@ -53,4 +53,4 @@ dkms.conf
 f.txt
 orders.txt
 stat.txt
-src/__pycache__
+src/__pycache__/
