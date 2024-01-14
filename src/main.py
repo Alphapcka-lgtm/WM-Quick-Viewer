@@ -8,7 +8,7 @@ import tkinter as tk
 def main():
     app = tk.Tk()
     app.title('Warframe.Market App-Dings')
-    app.geometry('450x300')
+    app.geometry('450x350')
 
     items_dict = warframe_market_data.get_items_dict(Language.de)
     select_frame = SelectFrame(items_dict, app)
@@ -19,6 +19,7 @@ def main():
     plot_frame.pack(fill=tk.BOTH)
 
     app.mainloop()
+
 
 if __name__ == '__main__':
     main()
