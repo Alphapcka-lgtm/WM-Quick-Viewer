@@ -23,7 +23,7 @@ def request_item_statistic_48h(url_name: str):
         else:
             date_prices[stat.datetime] = [stat.closed_price / stat.volume]
     
-    date_median_price = {date: statistics.median(prices) for date, prices in date_prices.items()}
+    date_median_price = {date: round(statistics.median(prices)) for date, prices in date_prices.items()}
 
     return date_median_price
 

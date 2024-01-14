@@ -12,13 +12,15 @@ import numpy as np
 
 class PlotFrame(tk.Frame):
 
+    PLOT_TITLE = "Prices of the last 48h"
+
     def __init__(self, master: Misc) -> None:
         super().__init__(master)
 
         self.figure = Figure(figsize=(5, 5), dpi=100)
         self.axes = self.figure.add_subplot(111)
         self.axes.set_visible(False)
-        self.axes.set_title('Prices of the last 48h')
+        self.axes.set_title(PlotFrame.PLOT_TITLE)
 
         self.annot = self.axes.annotate('', xy=(0,0), xytext=(20,20), textcoords='offset points', bbox=dict(boxstyle="round", fc="w"), arrowprops=dict(arrowstyle="->"))
         self.annot.set_visible(True)
@@ -41,6 +43,12 @@ class PlotFrame(tk.Frame):
         
         stats = [(date, price) for date, price in date_price.items()]
         dates, prices = zip(*stats)
+
+        self.axes.clear()
+        self.axes.set_title(PlotFrame.PLOT_TITLE)
+        self.annot = self.axes.annotate('', xy=(0,0), xytext=(10, 10), textcoords='offset points', bbox=dict(boxstyle="round", fc="w"), arrowprops=dict(arrowstyle="->"))
+        self.annot.set_visible(True)
+
         # there is only one 2dline
         self.plt_line = self.axes.plot(dates, prices, marker='.', picker=5)[0]
         self.axes.set_xlim(dates[0])
