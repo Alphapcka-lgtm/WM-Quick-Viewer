@@ -25,7 +25,7 @@ class SelectFrame(tk.Frame):
         self.items_combo.bind('<KeyRelease>', self._check_combo_item_input)
         self.items_combo.grid(column=0, row=1, padx=10, sticky='W')
 
-        tk.Label(self, text='Gib die Anzahl ein:').grid(column=1, row=0, padx=10, sticky='W')
+        tk.Label(self, text='Anzahl:').grid(column=1, row=0, padx=10, sticky='W')
 
         self.quantity_entry = tk.Entry(self, validate='key', width=5)
         self.quantity_entry.insert(0, '1')

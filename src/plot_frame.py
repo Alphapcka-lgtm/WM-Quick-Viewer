@@ -6,13 +6,14 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.backend_bases import MouseEvent
 from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
+from matplotlib.dates import DateFormatter
 from datetime import datetime
 import numpy as np
 
 
 class PlotFrame(tk.Frame):
 
-    PLOT_TITLE = "Prices of the last 48h"
+    PLOT_TITLE = "Preise über die letzten 48h"
 
     def __init__(self, master: Misc) -> None:
         super().__init__(master)
@@ -39,6 +40,7 @@ class PlotFrame(tk.Frame):
     def update_graph(self, date_price: dict[datetime, float]):
         if not date_price:
             self.axes.set_visible(False)
+            self.canvas.draw()
             return
         
         stats = [(date, price) for date, price in date_price.items()]
@@ -56,6 +58,8 @@ class PlotFrame(tk.Frame):
         self.axes.grid(True)
         self.axes.set_visible(True)
         self.axes.set_ylabel('Platin')
+        self.axes.xaxis.set_major_formatter(DateFormatter('%d.%m.%Y'))
+        self.figure.autofmt_xdate()
         self.canvas.draw()
 
     def hide_graph(self):
