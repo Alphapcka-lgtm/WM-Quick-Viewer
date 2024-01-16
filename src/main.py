@@ -8,6 +8,8 @@ import tkinter as tk
 def main():
     app = tk.Tk()
     app.title('Warframe.Market App-Dings')
+    img = tk.PhotoImage(file='warframe-market_icon.png')
+    app.iconphoto(True, img)
     app.geometry('450x350')
 
     items_dict = warframe_market_data.get_items_dict(Language.de)

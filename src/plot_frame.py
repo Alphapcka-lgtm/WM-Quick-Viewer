@@ -70,7 +70,7 @@ class PlotFrame(tk.Frame):
         self.annot.xy = pos
 
         price_data = self.plt_line.get_ydata(True)[ind['ind'][0]]
-        self.annot.set_text(f'{price_data} Platinum')
+        self.annot.set_text(f'{price_data} Platin')
         self.annot.get_bbox_patch().set_alpha(0.4)
 
     def _on_hover(self, event: MouseEvent):
