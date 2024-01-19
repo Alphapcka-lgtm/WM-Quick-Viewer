@@ -54,3 +54,5 @@ f.txt
 orders.txt
 stat.txt
 src/__pycache__/
+build
+dist
