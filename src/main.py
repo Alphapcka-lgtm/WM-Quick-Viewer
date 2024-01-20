@@ -6,14 +6,19 @@ import tkinter as tk
 
 
 def main():
+    LANGS = [
+        Language.en,
+        Language.de,
+    ]
+
     app = tk.Tk()
     app.title('Warframe.Market App-Dings')
     img = tk.PhotoImage(file='./warframe-market_icon.png')
     app.iconphoto(True, img)
     app.geometry('450x350')
 
-    items_dict = warframe_market_data.get_items_dict(Language.de)
-    select_frame = SelectFrame(items_dict, app)
+    items_lang_dict = warframe_market_data.get_items_lang_dict(LANGS)
+    select_frame = SelectFrame(items_lang_dict, app, LANGS)
     plot_frame = PlotFrame(app)
     select_frame.register_plot_frame(plot_frame)
 

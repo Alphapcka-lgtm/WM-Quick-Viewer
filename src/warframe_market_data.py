@@ -5,6 +5,9 @@ from pywmapi.orders.models import OrderType
 from datetime import datetime
 import statistics
 
+def get_items_lang_dict(langs: list[Language]):
+    items_lang_dict = {lang.value: get_items_dict(lang) for lang in langs}
+    return items_lang_dict
 
 def get_items_dict(language: Language = Language.en):
     items_short = pywmapi.items.list_items(language)
