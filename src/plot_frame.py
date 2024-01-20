@@ -27,12 +27,12 @@ class PlotFrame(tk.Frame):
         self.annot.set_visible(True)
 
         self.canvas = FigureCanvasTkAgg(self.figure, self)
-        self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True, pady=10)
+        self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
         self.toolbar = NavigationToolbar2Tk(self.canvas, self)
         self.toolbar.update()
 
-        self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.canvas._tkcanvas.pack(fill=tk.BOTH, expand=True)
         self.canvas.mpl_connect('motion_notify_event', self._on_hover)
 
         self.plt_line: Line2D = None
