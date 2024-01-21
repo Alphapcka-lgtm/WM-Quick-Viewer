@@ -113,13 +113,10 @@ class SelectFrame(tk.Frame):
         
         self.plot_frame.update_graph(date_median_price)
     
-<<<<<<< Updated upstream
-=======
     def _on_lang_select(self, event: tk.Event):
         lang = event.widget.get()
         self.items_combo['values'] = list(self.items_lang_dict[lang].keys())
         self.items_combo.set('')
     
->>>>>>> Stashed changes
     def register_plot_frame(self, plot_frame: PlotFrame):
         self.plot_frame = plot_frame
