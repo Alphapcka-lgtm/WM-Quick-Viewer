@@ -2,7 +2,8 @@ from pywmapi.common.enums import Language
 from select_frame import SelectFrame
 from selected_list_frame import SelectedListFrame
 from plot_frame import PlotFrame
-import warframe_market_data
+from warframe_market_data import WarframeMarketData
+from controller import Controller
 import tkinter as tk
 
 
@@ -16,9 +17,11 @@ def main():
     app.geometry('600x350')
 
     print('requesting item data... ', end='')
-    items_lang_dict = warframe_market_data.get_items_lang_dict(LANGS)
+    # items_lang_dict = warframe_market_data.get_items_lang_dict(LANGS)
+    data = WarframeMarketData(LANGS)
     print('done')
-    select_frame = SelectFrame(items_lang_dict, app, LANGS)
+    controller = Controller(data)
+    select_frame = SelectFrame(controller, app, LANGS)
     selected = SelectedListFrame(app)
     plot_frame = PlotFrame(app)
     select_frame.register_plot_frame(plot_frame)
