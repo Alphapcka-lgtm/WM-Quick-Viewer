@@ -26,7 +26,7 @@ class WarframeMarketData():
     def get_item_orders(self, item: ItemShort):
         return self._request_item_orders(item.url_name)
     
-    def calculate_price(prices: list[float]) -> int:
+    def calculate_price(self, prices: list[int]) -> int:
         return round(statistics.median(prices))
     
     def _get_items_lang_dict(self, langs: list[Language]):

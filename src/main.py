@@ -26,6 +26,8 @@ def main():
     plot_frame = PlotFrame(app)
     select_frame.register_plot_frame(plot_frame)
 
+    controller.register_select_frame(select_frame)
+
     # empty_frame.pack(side='top')
     # select_frame.pack(side='left', fill='y')
     # selected.pack(side='right', fill='y')

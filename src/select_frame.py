@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import Misc, ttk, messagebox
-from pywmapi.items import ItemShort
 from pywmapi.common.enums import Language
 from plot_frame import PlotFrame
 from controller import Controller
@@ -21,7 +20,7 @@ class SelectFrame(tk.Frame):
         tk.Label(self, text='Lang:').grid(column=0, row=0, padx=10, sticky='W')
 
         self.lang_combo = ttk.Combobox(self, width=5, textvariable=tk.StringVar(), state='readonly')
-        self.lang_combo['values'] = list(controller.data.get_langs)
+        self.lang_combo['values'] = list(controller.data.get_langs())
         self.lang_combo.current(0)
         self.lang_combo.bind('<<ComboboxSelected>>', self._on_lang_select)
         self.lang_combo.grid(column=1, row=0, padx=10, sticky='W')
