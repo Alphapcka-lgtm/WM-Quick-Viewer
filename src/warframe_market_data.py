@@ -17,8 +17,8 @@ class WarframeMarketData():
     def get_item_names(self, lang: str) -> list[str]:
         return list(self.items_langs_dict[lang].keys())
     
-    def get_item(self, lang: str, name: str) -> ItemShort:
-        return self.items_langs_dict[lang][name]
+    def get_item(self, lang: str, name: str) -> ItemShort | None:
+        return self.items_langs_dict[lang].get(name, None)
     
     def get_item_statistics(self, item: ItemShort):
         return self._request_item_statistic_48h(item.url_name)

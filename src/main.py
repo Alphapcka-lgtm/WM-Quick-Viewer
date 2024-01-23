@@ -17,7 +17,6 @@ def main():
     app.geometry('600x350')
 
     print('requesting item data... ', end='')
-    # items_lang_dict = warframe_market_data.get_items_lang_dict(LANGS)
     data = WarframeMarketData(LANGS)
     print('done')
     controller = Controller(data)
