@@ -57,3 +57,7 @@ src/__pycache__/
 build
 dist
 langs.txt
+src/views/__pycache__/
+src/controllers/__pycache__/
+src/models/__pycache__/
+src/utils/__pycache__/

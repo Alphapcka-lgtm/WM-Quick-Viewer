@@ -29,7 +29,7 @@ class SelectFrame(tk.Frame):
 
         self.items_combo = ttk.Combobox(self, width=30)
         self.items_combo.config(textvariable=tk.StringVar())
-        self.items_combo['values'] = self.controller.data.get_item_names('en')
+        self.items_combo['values'] = self.controller.data.item_names('en')
         self.items_combo.bind('<<ComboboxSelected>>', self._on_item_select)
         self.items_combo.bind('<KeyRelease>', self._check_combo_item_input)
         self.items_combo.grid(column=0, row=2, padx=10, sticky='W')
@@ -101,7 +101,7 @@ class SelectFrame(tk.Frame):
             multiplier = float(self.price_mulitplier_entry.get())
         except ValueError:
             multiplier = 1.0
-            messagebox.showerror('Input Error', 'Error when converting multiplier.\nContinuing with a multiplier of 1.')
+            messagebox.showerror('Input Error', 'Error when converting multiplier.\nContinuing with a multiplier of 1.0')
         selected_lang = self.lang_combo.get()
         selected_item = self.items_combo.get()
         item_short = self.controller.data.get_item(selected_lang, selected_item)

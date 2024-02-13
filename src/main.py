@@ -1,14 +1,22 @@
 from pywmapi.common.enums import Language
-from select_frame import SelectFrame
-from selected_list_frame import SelectedListFrame
-from plot_frame import PlotFrame
-from warframe_market_data import WarframeMarketData
-from controller import Controller
+from views.select_frame import SelectFrame
+# from views._old_selected_list_frame import SelectedListFrame
+from views.selected_view import SelectedView
+from views.plot_frame import PlotFrame
+from models.warframe_market_model import WarframeMarketData
+
+from controllers.select_frame_controller import SelectFrameController
+from controllers.selected_view_controller import SelectedViewController
+
 import tkinter as tk
+
+from views.item_view import ItemView
+import pywmapi
+from models.market_item import MarketItem
 
 
 def main():
-    LANGS = [Language.en, Language.de]
+    LANGS = {Language.en, Language.de}
 
     app = tk.Tk()
     app.title('Warframe.Market App-Dings')
@@ -19,18 +27,11 @@ def main():
     print('requesting item data... ', end='')
     data = WarframeMarketData(LANGS)
     print('done')
-    controller = Controller(data)
-    select_frame = SelectFrame(controller, app, LANGS)
-    selected = SelectedListFrame(app)
+    select_frame = SelectFrame(app)
+    select_frame_controller = SelectFrameController(data, select_frame)
+    selected = SelectedView(app)
+    selected_controller = SelectedViewController(selected, data)
     plot_frame = PlotFrame(app)
-    select_frame.register_plot_frame(plot_frame)
-
-    controller.register_select_frame(select_frame)
-
-    # empty_frame.pack(side='top')
-    # select_frame.pack(side='left', fill='y')
-    # selected.pack(side='right', fill='y')
-    # plot_frame.pack(side='bottom', fill='y')
 
     select_frame.grid(column=0, row=0, sticky='w')
     selected.grid(column=1, row=0, sticky='w')
@@ -41,6 +42,19 @@ def main():
 
     app.mainloop()
 
+def item_view_test_display():
+    app = tk.Tk()
+    app.title('Test item view')
+    app.geometry('350x80')
+
+    short = pywmapi.items.list_items()[0]
+    item = MarketItem(short)
+    item.set_lang_name(Language.en, short.item_name)
+    view = ItemView(app, item)
+    view.pack(fill='both')
+
+    app.mainloop()
 
 if __name__ == '__main__':
     main()
+    # item_view_test_display()
