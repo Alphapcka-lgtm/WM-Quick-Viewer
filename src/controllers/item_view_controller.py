@@ -19,6 +19,9 @@ class ItemViewController:
         self.frame = view
         self.data.add_lang_change_observer(self._on_lang_change)
 
+        self.frame.bind('<Activate>', self._on_click)
+        self.frame.bind('<Deactivate>', self._lost_focus)
+
         self._fill_view()
     
     def _fill_view(self):
@@ -60,3 +63,10 @@ class ItemViewController:
 
     def _on_lang_change(self, lang: Language):
         self.frame.item_name.config(text=self.item.get_lang_name(lang))
+    
+    def _on_click(self, event):
+        # print('Frame clicked!')
+        print(self.item.url_name, 'activated!')
+    
+    def _lost_focus(self, event):
+        print(self.item.url_name, 'deactivated')
