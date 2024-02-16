@@ -1,4 +1,6 @@
 from models.warframe_market_model import WarframeMarketData
+from models.market_item import MarketItem
+from utils.observable_dict import ObservableDict
 from views.select_frame import SelectFrame
 from tkinter.messagebox import showerror
 from pywmapi.common.enums import Language
@@ -10,7 +12,7 @@ class SelectFrameController():
         self.frame = frame
 
         lang = next(iter(self.model.langs))
-        names = self.model.item_names(lang)
+        names = self.model.item_names_excluded(lang)
         self.frame.items_var.set(names)
         
         self._config_elements()
@@ -20,6 +22,8 @@ class SelectFrameController():
         langs = self.model.langs
         self.frame.lang_combo.config(values=[lang.value for lang in langs])
         self.frame.lang_combo.current(0)
+        lang = Language(self.frame.lang_combo.get())
+        self.model.current_lang = lang
 
         self.frame.items_lb.config(selectmode=tk.SINGLE)
 
@@ -48,6 +52,7 @@ class SelectFrameController():
     def _on_lang_select(self, event):
         lang_str = self.frame.lang_combo.get()
         lang = Language(lang_str)
+        self.model.current_lang = lang
         self.frame.items_var.set(self.model.item_names(lang))
 
     def _item_search(self, _: str):
@@ -89,8 +94,11 @@ class SelectFrameController():
         curse_sel = self.frame.items_lb.curselection()[0]
         item_name = self.frame.items_var.get()[curse_sel]
         item_id = self.model.name_to_id(item_name, lang)
-        item = self.model.get_item(item_id)
-        item.quantity = quantity
-        item.modifier = multiplier
 
-        self.model.add_selected(item_id) 
+        self.model.add_selected(item_id, quantity, multiplier) 
+
+        self.frame.items_var.set(self.model.item_names_excluded(self.model.current_lang))
+    
+    def _on_selected_items_changed(self, mode: str, item_id: str, item: MarketItem):
+        names = self.model.item_names_excluded(self.model.current_lang)
+        self.frame.items_var.set(names)

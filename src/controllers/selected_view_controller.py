@@ -3,6 +3,7 @@ from views.item_view import ItemView
 from models.warframe_market_model import WarframeMarketData
 from models.market_item import MarketItem
 from utils.observable_dict import ObservableDict
+from controllers.item_view_controller import ItemViewController
 
 import tkinter as tk
 
@@ -15,8 +16,10 @@ class SelectedViewController:
     def _on_item_selected(self, mode: str, item_id: str, item: MarketItem):
         if mode == ObservableDict.ITEM_ADDED:
             interior = self.frame.items_frame.interior
-            item_view = ItemView(interior, item)
+            item_view = ItemView(interior)
             item_view.pack(side='bottom')
+
+            ItemViewController(item_view, self.model, item)
             # interior.pack()
             # tk.Label(interior, text='is was just added!').pack()
         else:
