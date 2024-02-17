@@ -4,9 +4,7 @@ from views.plot_frame import PlotFrame
 
 import matplotlib
 matplotlib.use('TkAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.backend_bases import MouseEvent
-from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
 from matplotlib.dates import DateFormatter
 
