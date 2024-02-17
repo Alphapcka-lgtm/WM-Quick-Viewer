@@ -6,6 +6,7 @@ from models.warframe_market_model import WarframeMarketData
 
 from controllers.select_frame_controller import SelectFrameController
 from controllers.selected_view_controller import SelectedViewController
+from controllers.plot_frame_controller import PlotFrameController
 
 import tkinter as tk
 
@@ -17,7 +18,7 @@ def main():
     app.title('Warframe.Market App-Dings')
     img = tk.PhotoImage(file='./warframe-market_icon.png')
     app.iconphoto(True, img)
-    app.geometry('600x350')
+    app.geometry('800x550')
 
     print('requesting item data... ', end='')
     data = WarframeMarketData(LANGS)
@@ -27,6 +28,9 @@ def main():
     selected = SelectedView(app)
     selected_controller = SelectedViewController(selected, data)
     plot_frame = PlotFrame(app)
+    plotframe_controller = PlotFrameController(data, plot_frame)
+
+    selected_controller.plot_frame_controller = plotframe_controller
 
     select_frame.grid(column=0, row=0, sticky='w')
     selected.grid(column=1, row=0, sticky='w')

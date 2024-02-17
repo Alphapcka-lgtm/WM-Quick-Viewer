@@ -1,6 +1,7 @@
 from models.warframe_market_model import WarframeMarketData
 from models.market_item import MarketItem
 from views.item_view import ItemView
+from controllers.plot_frame_controller import PlotFrameController
 
 import requests
 from io import BytesIO
@@ -19,10 +20,19 @@ class ItemViewController:
         self.frame = view
         self.data.add_lang_change_observer(self._on_lang_change)
 
-        self.frame.bind('<Activate>', self._on_click)
-        self.frame.bind('<Deactivate>', self._lost_focus)
+        self.frame.btn_graph.config(command=self._display_graph)
+
+        self._pf_controller: PlotFrameController = None
 
         self._fill_view()
+
+    @property
+    def plot_frame_controller(self):
+        return self._pf_controller
+    
+    @plot_frame_controller.setter
+    def plot_frame_controller(self, ctrl: PlotFrameController):
+        self._pf_controller = ctrl
     
     def _fill_view(self):
         self.frame.item_name.config(text=self.item.get_lang_name(self.data.current_lang))
@@ -64,9 +74,5 @@ class ItemViewController:
     def _on_lang_change(self, lang: Language):
         self.frame.item_name.config(text=self.item.get_lang_name(lang))
     
-    def _on_click(self, event):
-        # print('Frame clicked!')
-        print(self.item.url_name, 'activated!')
-    
-    def _lost_focus(self, event):
-        print(self.item.url_name, 'deactivated')
+    def _display_graph(self):
+        self.plot_frame_controller.plot_item(self.item)
