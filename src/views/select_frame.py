@@ -16,7 +16,7 @@ class SelectFrame(tk.Frame):
         tk.Label(self, text='Items').grid(column=0, row=1, padx=10, sticky='W')
 
         items_frame = tk.Frame(self)
-        self.items_search_entry = tk.Entry(items_frame)
+        self.items_search_entry = tk.Entry(items_frame, validate='key')
         y_scroll = tk.Scrollbar(items_frame, orient=tk.VERTICAL)
         self.items_var = ListStringVar()
         self.items_lb = tk.Listbox(items_frame, activestyle='dotbox', yscrollcommand=y_scroll.set, listvariable=self.items_var)

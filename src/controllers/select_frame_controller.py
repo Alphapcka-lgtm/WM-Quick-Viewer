@@ -33,7 +33,7 @@ class SelectFrameController():
         vcmd = (self.frame.quantity_entry.register(self._quantity_input_validation))
         self.frame.quantity_entry.config(validatecommand=(vcmd, '%P'))
 
-        vcmd = self.frame.items_search_entry.register(self._item_search)
+        vcmd = (self.frame.items_search_entry.register(self._item_search))
         self.frame.items_search_entry.config(validatecommand=(vcmd, '%P'))
     
     def _bind(self):
@@ -55,7 +55,7 @@ class SelectFrameController():
         self.model.current_lang = lang
         self.frame.items_var.set(self.model.item_names(lang))
 
-    def _item_search(self, _: str):
+    def _item_search(self, _: str) -> bool:
         search_input = self.frame.items_search_entry.get()
         names = self.model.item_names(Language(self.frame.lang_combo.get()))
         if search_input == '':
