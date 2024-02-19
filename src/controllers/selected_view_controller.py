@@ -5,12 +5,15 @@ from models.market_item import MarketItem
 from utils.observable_dict import ObservableDict
 from controllers.item_view_controller import ItemViewController
 from controllers.plot_frame_controller import PlotFrame
+import gc
 
 class SelectedViewController:
     def __init__(self, view: SelectedView, model: WarframeMarketData) -> None:
         self.frame = view
         self.model = model
         self.model.selected_items.add_listener(self._on_item_selected)
+
+        self._selected_views: dict[str, tuple[ItemView, ItemViewController]] = {}
 
         self._pf_ctrl: PlotFrame = None
     
@@ -28,9 +31,15 @@ class SelectedViewController:
             item_view = ItemView(interior)
             item_view.pack(side='bottom')
 
+
             iv_ctrl = ItemViewController(item_view, self.model, item)
             iv_ctrl.plot_frame_controller = self.plot_frame_controller
+            
+            self._selected_views[item_id] = (item_view, iv_ctrl)
             # interior.pack()
             # tk.Label(interior, text='is was just added!').pack()
         else:
-            print('Item was deleted!')
+            item_view, item_view_ctrl = self._selected_views[item_id]
+            item_view.destroy()
+            item_view_ctrl.rm_lang_listener()
+            gc.collect()

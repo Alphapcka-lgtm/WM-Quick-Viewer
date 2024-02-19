@@ -18,9 +18,10 @@ class ItemViewController:
         self.item = item
         self.data = data
         self.frame = view
-        self.data.add_lang_change_observer(self._on_lang_change)
+        self._rm_lang_listener = self.data.add_lang_change_observer(self._on_lang_change)
 
         self.frame.btn_graph.config(command=self._display_graph)
+        self.frame.remove_btn.config(command=self._rmv_item_from_selected)
 
         self._pf_controller: PlotFrameController = None
 
@@ -33,6 +34,9 @@ class ItemViewController:
     @plot_frame_controller.setter
     def plot_frame_controller(self, ctrl: PlotFrameController):
         self._pf_controller = ctrl
+    
+    def rm_lang_listener(self):
+        self._rm_lang_listener()
     
     def _fill_view(self):
         self.frame.item_name.config(text=self.item.get_lang_name(self.data.current_lang))
@@ -76,3 +80,6 @@ class ItemViewController:
     
     def _display_graph(self):
         self.plot_frame_controller.plot_item(self.item)
+    
+    def _rmv_item_from_selected(self):
+        self.data.selected_items.pop(self.item.item_id)

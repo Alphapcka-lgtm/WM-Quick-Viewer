@@ -8,12 +8,7 @@ class SelectFrame(tk.Frame):
     def __init__(self, master: Misc):
         super().__init__(master)
 
-        tk.Label(self, text='Item lang:').grid(column=0, row=0, padx=10, sticky='W')
-
-        self.lang_combo = ttk.Combobox(self, width=5, textvariable=tk.StringVar(), state='readonly')
-        self.lang_combo.grid(column=1, row=0, padx=10, sticky='W')
-
-        tk.Label(self, text='Items').grid(column=0, row=1, padx=10, sticky='W')
+        tk.Label(self, text='Items').grid(column=0, row=0, padx=10, sticky='W')
 
         items_frame = tk.Frame(self)
         self.items_search_entry = tk.Entry(items_frame, validate='key')

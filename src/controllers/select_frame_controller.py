@@ -18,13 +18,10 @@ class SelectFrameController():
         self._config_elements()
         self._bind()
 
-    def _config_elements(self):
-        langs = self.model.langs
-        self.frame.lang_combo.config(values=[lang.value for lang in langs])
-        self.frame.lang_combo.current(0)
-        lang = Language(self.frame.lang_combo.get())
-        self.model.current_lang = lang
+        self.model.add_lang_change_observer(self._on_lang_change)
+        self.model.selected_items.add_listener(self._on_selected_change)
 
+    def _config_elements(self):
         self.frame.items_lb.config(selectmode=tk.SINGLE)
 
         vcmd = (self.frame.multiplier_entry.register(self._multiplier_input_validation))
@@ -38,7 +35,6 @@ class SelectFrameController():
     
     def _bind(self):
         self.frame.btn_add.config(command=self._add_btn_command)
-        self.frame.lang_combo.bind('<<ComboboxSelected>>', self._on_lang_select)
         self.frame.items_lb.bind('<<ListboxSelect>>', self._on_item_select)
 
     def _on_item_select(self, event):
@@ -49,19 +45,19 @@ class SelectFrameController():
         
         self.frame.btn_add.config(state='normal')
 
-    def _on_lang_select(self, event):
-        lang_str = self.frame.lang_combo.get()
-        lang = Language(lang_str)
-        self.model.current_lang = lang
-        self.frame.items_var.set(self.model.item_names(lang))
+    def _on_lang_change(self, lang: Language):
+        self.frame.items_var.set(self.model.item_names_excluded(lang))
+    
+    def _on_selected_change(self, action: str, item_id: str, item: MarketItem):
+        self.frame.items_var.set(self.model.item_names_excluded(self.model.current_lang))
 
     def _item_search(self, _: str) -> bool:
         search_input = self.frame.items_search_entry.get()
-        names = self.model.item_names(Language(self.frame.lang_combo.get()))
+        names = self.model.item_names(self.model.current_lang)
         if search_input == '':
             self.frame.items_var.set(names)
         else:
-            filtered_names = list(filter(lambda item_name: search_input in item_name, names))
+            filtered_names = list(filter(lambda item_name: search_input.lower() in item_name.lower(), names))
             self.frame.items_var.set(filtered_names)
         
         return True
@@ -88,16 +84,13 @@ class SelectFrameController():
             quantity = 1
         else: quantity = int(quantity)
         
-        lang_str = self.frame.lang_combo.get()
-        lang = Language(lang_str)
+        lang = self.model.current_lang
 
         curse_sel = self.frame.items_lb.curselection()[0]
         item_name = self.frame.items_var.get()[curse_sel]
         item_id = self.model.name_to_id(item_name, lang)
 
         self.model.add_selected(item_id, quantity, multiplier) 
-
-        self.frame.items_var.set(self.model.item_names_excluded(self.model.current_lang))
     
     def _on_selected_items_changed(self, mode: str, item_id: str, item: MarketItem):
         names = self.model.item_names_excluded(self.model.current_lang)

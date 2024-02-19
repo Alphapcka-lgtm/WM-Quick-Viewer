@@ -11,12 +11,15 @@ class ItemView(tk.Frame):
     def __init__(self, master: Misc) -> None:
         super().__init__(master, highlightbackground="darkgrey", highlightthickness=2, borderwidth=0)
 
-        self.item_thumb = tk.Label(self)
+        self.item_thumb = ttk.Label(self)
         # self.item_thumb.image = img
         self.item_thumb.place(x=0, y=5, anchor='nw')
 
-        self.item_name = tk.Label(self, text='<item name>', font='Helvetica 10 bold')
+        self.item_name = ttk.Label(self, text='<item name>', font='Helvetica 10 bold')
         self.item_name.place(x=90, y=5, anchor='nw')
+
+        self.remove_btn = ttk.Button(self, text='X', width=5)
+        self.remove_btn.place(x=345, y=5, anchor='ne')
 
         self.item_price_single = tk.Label(self, text='Item price per one: <Item price single>')
         self.item_price_single.place(x=90, y=25, anchor='nw')
