@@ -1,13 +1,8 @@
 import pywmapi
 from pywmapi.common.enums import Language
-from pywmapi.auth.models import UserShort
-from pywmapi.orders.models import OrderType
-from pywmapi.items.models import ItemShort
 from models.market_item import MarketItem
 from typing import Callable
-from datetime import datetime
 from utils.observable_dict import ObservableDict
-import statistics
 
 class WarframeMarketData:
 
@@ -42,9 +37,6 @@ class WarframeMarketData:
     
     def get_item(self, item_id: str):
         return self.items_dict[item_id]
-    
-    def calculate_price(self, prices: list[int]) -> int:
-        return round(statistics.median(prices))
     
     def name_to_id(self, item_name: str, lang: Language) -> str | None:
         for item in self.items_dict.values():
