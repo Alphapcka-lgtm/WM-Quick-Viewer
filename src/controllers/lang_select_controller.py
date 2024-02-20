@@ -19,4 +19,3 @@ class LangSelectController:
         lang_str = self.view.lang_cmb.get()
         lang = Language(lang_str)
         self.model.current_lang = lang
-        # self.view.items_var.set(self.model.item_names(lang))
