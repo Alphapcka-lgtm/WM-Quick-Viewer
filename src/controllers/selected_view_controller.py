@@ -5,7 +5,6 @@ from models.market_item import MarketItem
 from utils.observable_dict import ObservableDict
 from controllers.item_view_controller import ItemViewController
 from controllers.plot_frame_controller import PlotFrame
-import gc
 
 class SelectedViewController:
     def __init__(self, view: SelectedView, model: WarframeMarketData) -> None:

@@ -40,6 +40,3 @@ class MarketItem:
     
     def remove_lang_name(self, lang: Language):
         self.localized_item_names.__delitem__(lang.value)
-    
-    def calculate_price(self) -> tuple[int, int]:
-        pass
