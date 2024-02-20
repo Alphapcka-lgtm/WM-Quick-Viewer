@@ -37,19 +37,11 @@ class WarframeMarketData:
         if len(self.selected_items) == 0:
             return full_names
         
-        # selected_names = {item.get_lang_name(lang) for item in self.selected_items.values()}
-        # return list(selected_names.difference(full_names))
         selected_names = [item.get_lang_name(lang) for item in self.selected_items.values()]
         return list(filter(lambda item_name: item_name not in selected_names, full_names))
     
     def get_item(self, item_id: str):
         return self.items_dict[item_id]
-    
-    def get_item_statistics(self, item_url_name: str):
-        return self._request_item_statistic_48h(item_url_name)
-    
-    def get_item_orders(self, item_url_name: ItemShort):
-        return self._request_item_orders(item_url_name)
     
     def calculate_price(self, prices: list[int]) -> int:
         return round(statistics.median(prices))
@@ -94,32 +86,3 @@ class WarframeMarketData:
                 items_dict[short_item.id].set_lang_name(lang, short_item.item_name)
         
         return items_dict
-
-    def _request_item_statistic_48h(self, url_name: str):
-        stats = pywmapi.statistics.get_statistic(url_name)
-        if len(stats.closed_48h) == 0:
-            return None
-        date_prices: dict[datetime, list[float]] = {}
-        for stat in stats.closed_48h:
-            if stat.datetime in date_prices.keys():
-                date_prices[stat.datetime].append(stat.closed_price / stat.volume)
-            else:
-                date_prices[stat.datetime] = [stat.closed_price / stat.volume]
-
-        date_median_price = {date: round(statistics.median(prices)) for date, prices in date_prices.items()}
-
-        return date_median_price
-
-    def _request_item_orders(self, url_name: str):
-        orders = pywmapi.orders.get_orders(url_name)
-        orders = list(filter(lambda order: order.order_type == OrderType.sell and order.user.status == UserShort.Status.ingame, orders))
-        orders = list(map(lambda order: order.platinum / order.quantity, orders))
-        return orders
-
-    def item_price_from_statistics_or_order(self, url_name: str, date_median_price: dict[datetime, float]):
-        """Berechned den Preis des Items von der übergeben Statistik oder requestet alle Orders für das Item, sollte es keine Statistiken geben."""
-        if not date_median_price:
-            orders = self._request_item_orders(url_name)
-            return round(statistics.median(orders))
-
-        return round(statistics.median(date_median_price.values()))
