@@ -1,26 +1,26 @@
-import warframe_market_data
 import tkinter as tk
 from tkinter import Misc, ttk, messagebox
-from pywmapi.items import ItemShort
 from pywmapi.common.enums import Language
 from plot_frame import PlotFrame
+from controller import Controller
 
 
 class SelectFrame(tk.Frame):
 
     XELTO_MODIFIER = 0.60
 
-    def __init__(self, items_lang_dict: dict[str, dict[str, ItemShort]], master: Misc, langs: list[Language]) -> None:
+    def __init__(self, controller: Controller, master: Misc, langs: list[Language]) -> None:
         super().__init__(master)
 
-        self.items_lang_dict = items_lang_dict
+        # self.items_lang_dict = items_lang_dict
+        self.controller = controller
 
         self.plot_frame: PlotFrame = None
 
         tk.Label(self, text='Lang:').grid(column=0, row=0, padx=10, sticky='W')
 
         self.lang_combo = ttk.Combobox(self, width=5, textvariable=tk.StringVar(), state='readonly')
-        self.lang_combo['values'] = list(items_lang_dict.keys())
+        self.lang_combo['values'] = list(controller.data.get_langs())
         self.lang_combo.current(0)
         self.lang_combo.bind('<<ComboboxSelected>>', self._on_lang_select)
         self.lang_combo.grid(column=1, row=0, padx=10, sticky='W')
@@ -29,7 +29,7 @@ class SelectFrame(tk.Frame):
 
         self.items_combo = ttk.Combobox(self, width=30)
         self.items_combo.config(textvariable=tk.StringVar())
-        self.items_combo['values'] = list(items_lang_dict['en'].keys())
+        self.items_combo['values'] = self.controller.data.item_names('en')
         self.items_combo.bind('<<ComboboxSelected>>', self._on_item_select)
         self.items_combo.bind('<KeyRelease>', self._check_combo_item_input)
         self.items_combo.grid(column=0, row=2, padx=10, sticky='W')
@@ -58,7 +58,6 @@ class SelectFrame(tk.Frame):
         self.confirm_btn.grid(column=1, row=4, padx=10, sticky='W')
 
         # spacer grids
-        # tk.Label(self).grid(column=1, row=3)
         tk.Label(self).grid(column=1, row=5)
 
         self.label_single_price = tk.Label(self)
@@ -102,12 +101,17 @@ class SelectFrame(tk.Frame):
             multiplier = float(self.price_mulitplier_entry.get())
         except ValueError:
             multiplier = 1.0
-            messagebox.showerror('Input Error', 'Error when converting multiplier.\nContinuing with a multiplier of 1.')
+            messagebox.showerror('Input Error', 'Error when converting multiplier.\nContinuing with a multiplier of 1.0')
         selected_lang = self.lang_combo.get()
         selected_item = self.items_combo.get()
-        item_short = self.items_lang_dict[selected_lang][selected_item]
-        date_median_price = warframe_market_data.request_item_statistic_48h(item_short.url_name)
-        price_per_one = warframe_market_data.item_price_from_statistics_or_order(item_short.url_name, date_median_price)
+        item_short = self.controller.data.get_item(selected_lang, selected_item)
+        date_median_price = self.controller.data.get_item_statistics(item_short)
+        # price_per_one = warframe_market_data.item_price_from_statistics_or_order(item_short.url_name, date_median_price)
+        if date_median_price:
+            price_per_one = self.controller.data.calculate_price(list(date_median_price.values())) 
+        else: 
+            orders = self.controller.data.get_item_orders(item_short)
+            price_per_one = self.controller.data.calculate_price(orders) 
 
         self.label_single_price.config(text=f'Durchschnittspreis pro item: {price_per_one} Platin')
         self.label_multiplier_single_price.config(text=f'Multiplier Preis pro Item: {round(price_per_one * multiplier)} Platin')
@@ -126,6 +130,7 @@ class SelectFrame(tk.Frame):
     def _on_lang_select(self, event: tk.Event):
         lang = event.widget.get()
         self.items_combo['values'] = list(self.items_lang_dict[lang].keys())
+        self.items_combo.set('')
     
     def register_plot_frame(self, plot_frame: PlotFrame):
         self.plot_frame = plot_frame
