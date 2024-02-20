@@ -42,4 +42,6 @@ class SelectedViewController:
             item_view, item_view_ctrl = self._selected_views[item_id]
             item_view.destroy()
             item_view_ctrl.rm_lang_listener()
-            gc.collect()
+            
+            del item_view
+            del item_view_ctrl
