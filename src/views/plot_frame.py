@@ -12,7 +12,7 @@ class PlotFrame(tk.Frame):
     def __init__(self, master: Misc) -> None:
         super().__init__(master)
 
-        self.figure = Figure(figsize=(3, 3), dpi=100)
+        self.figure = Figure(figsize=(3, 2), dpi=100)
 
         self.canvas = FigureCanvasTkAgg(self.figure, self)
         self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)

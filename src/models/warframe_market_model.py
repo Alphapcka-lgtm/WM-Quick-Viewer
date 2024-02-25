@@ -53,7 +53,7 @@ class WarframeMarketData:
         self.selected_items[item_id] = item
     
     def rmv_selected(self, item_id: str):
-        self.items_dict.pop(item_id)
+        del self.selected_items[item_id]
         
     def add_lang_change_observer(self, func: Callable[[Language], None]):
         self._lang_change_observers.append(func)
