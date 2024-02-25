@@ -12,7 +12,6 @@ from controllers.selected_frame_controller import SelectedViewController, Select
 from controllers.plot_frame_controller import PlotFrameController
 
 import tkinter as tk
-from tkinter import ttk
 
 def main():
     LANGS = {Language.en, Language.de}
