@@ -1,4 +1,4 @@
-from views.selected_view import SelectedView, SelectedViewTV
+from views.selected_frame import SelectedView, SelectedFrameTV
 from views.item_view import ItemView
 from models.warframe_market_model import WarframeMarketData
 from models.market_item import MarketItem
@@ -11,6 +11,8 @@ from pywmapi.orders.models import OrderRow, OrderType, UserShort
 
 import tkinter as tk
 
+from typing import Literal
+import re
 import requests
 from io import BytesIO
 from PIL import Image, ImageTk
@@ -55,14 +57,16 @@ class SelectedViewController:
             del item_view
             del item_view_ctrl
 
-class SelectedViewTVController:
-    def __init__(self, view: SelectedViewTV, model: WarframeMarketData) -> None:
+class SelectedFrameTVController:
+    def __init__(self, view: SelectedFrameTV, model: WarframeMarketData) -> None:
         self.frame = view
         self.model = model
         self.model.selected_items.add_listener(self._on_selected_changed)
 
         self._pf_ctrl: PlotFrameController = None
-        self._item_thumbs: dict[str, tk.PhotoImage] = {}
+        self._item_thumbs: dict[str, tuple[tk.PhotoImage, MarketItem]] = {}
+
+        self._full_price = int(0)
 
         self._bind()
     
@@ -80,15 +84,29 @@ class SelectedViewTVController:
     
     def _on_selected_changed(self, action: str, item_id: str, item: MarketItem):
         if action is ObservableDict.ITEM_DEL:
+            price_pq_str = self.frame.tv_selected_items.item(item_id, option='values')[2]
+            price_pq = int(re.findall(r'\d+', price_pq_str)[0])
             self.frame.tv_selected_items.delete(item_id)
             del self._item_thumbs[item_id]
+            self._update_full_price(action='sub', price_pq=price_pq)
             return
         
         img = self._create_item_tumb(item.thumb)
         price_po, price_pq = self._calculate_price(item)
-        data = (f"{price_po} Platin", f"{price_pq} Platin")
+        data = (item.quantity, f"{price_po} Platin", f"{price_pq} Platin")
         self.frame.tv_selected_items.insert(parent='', iid=item_id, index='end', image=img, text=item.get_lang_name(self.model.current_lang), values=data)
-        self._item_thumbs[item_id] = img
+        self._item_thumbs[item_id] = (img, item)
+        self._update_full_price(action='add', price_pq=price_pq)
+
+    def _update_full_price(self, action: Literal["add", "sub"], price_pq: int):
+        if action not in ("add", "sub"):
+            raise KeyError(f'Unknown action: {action}')
+
+        if action == "add":
+            self._full_price += price_pq
+        else:
+            self._full_price -= price_pq
+        self.frame.lbl_complete_price.config(text=f'Full price: {self._full_price}')
 
     def _create_item_tumb(self, thumb: str):
         thumb_url = 'https://warframe.market/static/assets/' + thumb

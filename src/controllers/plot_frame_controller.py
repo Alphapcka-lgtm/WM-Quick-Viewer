@@ -22,6 +22,7 @@ class PlotFrameController:
         self.axes = self.view.figure.add_subplot(111)
         self.axes.set_visible(False)
         self.axes.set_title(PlotFrame.PLOT_TITLE)
+        self.axes.format_coord = lambda x, y: ""
 
         self.annot = self.axes.annotate('', xy=(0,0), xytext=(20,20), textcoords='offset points', bbox=dict(boxstyle="round", fc="w"), arrowprops=dict(arrowstyle="->"))
         self.annot.set_visible(True)

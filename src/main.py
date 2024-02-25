@@ -2,13 +2,13 @@ from pywmapi.common.enums import Language
 
 from views.lang_select_view import LangSelectView
 from views.select_frame import SelectFrame
-from views.selected_view import SelectedViewTV, SelectedView
+from views.selected_frame import SelectedFrameTV, SelectedView
 from views.plot_frame import PlotFrame
 from models.warframe_market_model import WarframeMarketData
 
 from controllers.lang_select_controller import LangSelectController
 from controllers.select_frame_controller import SelectFrameController
-from controllers.selected_view_controller import SelectedViewController, SelectedViewTVController
+from controllers.selected_frame_controller import SelectedViewController, SelectedFrameTVController
 from controllers.plot_frame_controller import PlotFrameController
 
 import tkinter as tk
@@ -32,7 +32,7 @@ def main():
     # lang_frame.grid(column=0, row=0, sticky='WE', columnspan=2)
 
     select_frame = SelectFrame(app)
-    select_frame.config(highlightbackground='red', highlightthickness=2, borderwidth=0)
+    # select_frame.config(highlightbackground='red', highlightthickness=2, borderwidth=0)
     # select_frame.config(width=50, height=50)
     select_frame_controller = SelectFrameController(data, select_frame)
     # select_frame.grid(column=0, row=1, sticky='NWE')
@@ -42,12 +42,12 @@ def main():
     # selected.config(width=50, height=50)
     # selected_controller = SelectedViewController(selected, data)
     # selected.grid(column=1, row=1, sticky='NWE')
-    selected = SelectedViewTV(app)
-    selected_controller = SelectedViewTVController(selected, data)
+    selected = SelectedFrameTV(app)
+    selected_controller = SelectedFrameTVController(selected, data)
 
     plot_frame = PlotFrame(app)
     # plot_frame.config(width=50, height=50)
-    plot_frame.config(highlightbackground='yellow', highlightthickness=2, borderwidth=0)
+    # plot_frame.config(highlightbackground='yellow', highlightthickness=2, borderwidth=0)
     plotframe_controller = PlotFrameController(data, plot_frame)
     # plot_frame.grid(column=0, row=2, sticky='WES', columnspan=2)
 
@@ -61,7 +61,7 @@ def main():
     lang_frame.grid(column=0, row=0, sticky='NSEW', columnspan=2)
     select_frame.grid(column=0, row=1, sticky='NSEW', pady=10)
     selected.grid(column=1, row=1, sticky='NSEW', pady=10)
-    plot_frame.grid(column=0, row=2, sticky='NSEW', columnspan=2)
+    plot_frame.grid(column=0, row=2, sticky='NSEW')
 
     app.columnconfigure(1, weight=1)
     app.rowconfigure(1, weight=1)
