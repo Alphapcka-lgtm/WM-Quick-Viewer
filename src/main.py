@@ -27,29 +27,16 @@ def main():
     data = WarframeMarketData(LANGS)
     print('done')
     lang_frame = LangSelectView(app)
-    # lang_frame.config(highlightbackground='blue', highlightthickness=2, borderwidth=0)
     lang_frame_controller = LangSelectController(data, lang_frame)
-    # lang_frame.grid(column=0, row=0, sticky='WE', columnspan=2)
 
     select_frame = SelectFrame(app)
-    # select_frame.config(highlightbackground='red', highlightthickness=2, borderwidth=0)
-    # select_frame.config(width=50, height=50)
     select_frame_controller = SelectFrameController(data, select_frame)
-    # select_frame.grid(column=0, row=1, sticky='NWE')
 
-    # selected = SelectedView(app)
-    # selected.config(highlightbackground='green', highlightthickness=2, borderwidth=0)
-    # selected.config(width=50, height=50)
-    # selected_controller = SelectedViewController(selected, data)
-    # selected.grid(column=1, row=1, sticky='NWE')
     selected = SelectedFrameTV(app)
     selected_controller = SelectedFrameTVController(selected, data)
 
     plot_frame = PlotFrame(app)
-    # plot_frame.config(width=50, height=50)
-    # plot_frame.config(highlightbackground='yellow', highlightthickness=2, borderwidth=0)
     plotframe_controller = PlotFrameController(data, plot_frame)
-    # plot_frame.grid(column=0, row=2, sticky='WES', columnspan=2)
 
     selected_controller.plot_frame_controller = plotframe_controller
 
