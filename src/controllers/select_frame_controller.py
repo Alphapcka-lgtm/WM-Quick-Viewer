@@ -90,7 +90,10 @@ class SelectFrameController():
         item_name = self.frame.items_var.get()[curse_sel]
         item_id = self.model.name_to_id(item_name, lang)
 
-        self.model.add_selected(item_id, quantity, multiplier) 
+        try:
+            self.model.add_selected(item_id, quantity, multiplier) 
+        except Exception as e:
+            showerror('Data Error', f'ERROR: {e}')
     
     def _on_selected_items_changed(self, mode: str, item_id: str, item: MarketItem):
         names = self.model.item_names_excluded(self.model.current_lang)

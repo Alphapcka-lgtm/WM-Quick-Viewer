@@ -46,7 +46,7 @@ def main():
 
     lang_frame.grid(column=0, row=0, sticky='NSEW', columnspan=2)
     select_frame.grid(column=0, row=1, sticky='NSEW', pady=10)
-    selected.grid(column=1, row=1, sticky='NSEW', pady=10)
+    selected.grid(column=1, row=1, sticky='NSEW', pady=(0, 10), padx=(0, 10))
     plot_frame.grid(column=0, row=2, sticky='NSEW')
 
     app.columnconfigure(1, weight=1)
@@ -56,16 +56,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # origin = 'https://warframe.fandom.com'
-    # path = '/api.php'
-    # params = {
-	#     'action': "scribunto-console",
-	#     'format': "json",
-	#     'title': "Module:Void/data",
-	#     'content': "",
-	#     'question': 'local VoidData = require(\'Module:Void/data\').PrimeData local json = require(\'Module:JSON\') print(json.stringify(VoidData))',
-	#     'clear': '1'
-    # }
-    # query_string = urlencode(params)
-    # url = f"{origin}{path}?{query_string}"
-    # print(url)
