@@ -1,4 +1,3 @@
-import pywmapi
 from pywmapi.items.models import ItemShort
 from pywmapi.statistics.models import Statistic
 from pywmapi.orders.models import OrderRow
@@ -69,7 +68,7 @@ class WarframeMarketData:
     def _get_items_lang_dict(self, langs: set[Language]):
         langs_iter = iter(langs)
         first_lang = next(langs_iter)
-        items = pywmapi.items.list_items(first_lang)
+        items = api_requester.request_items(first_lang)
 
         items_dict: dict[str, MarketItem] = {}
         for item in items:
@@ -78,7 +77,7 @@ class WarframeMarketData:
             items_dict[item.id] = mi
         
         for lang in langs_iter:
-            items = pywmapi.items.list_items(lang)
+            items = api_requester.request_items(lang)
             for short_item in items:
                 if short_item.id not in items_dict:
                     raise KeyError('TODO: item id not in items_dict')
