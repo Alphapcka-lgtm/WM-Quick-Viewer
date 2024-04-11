@@ -2,13 +2,13 @@ from pywmapi.common.enums import Language
 
 from views.lang_select_view import LangSelectView
 from views.select_frame import SelectFrame
-from views.selected_frame import SelectedFrameTV, SelectedView
+from views.selected_frame import SelectedFrameTV
 from views.plot_frame import PlotFrame
-from models.warframe_market_model import WarframeMarketData
+from models import WarframeMarketData
 
 from controllers.lang_select_controller import LangSelectController
 from controllers.select_frame_controller import SelectFrameController
-from controllers.selected_frame_controller import SelectedViewController, SelectedFrameTVController
+from controllers.selected_frame_controller import SelectedFrameTVController
 from controllers.plot_frame_controller import PlotFrameController
 
 import tkinter as tk

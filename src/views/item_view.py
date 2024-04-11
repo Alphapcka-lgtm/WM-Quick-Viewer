@@ -1,11 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import Misc
-from models.market_item import MarketItem
-import requests
-import io
-from PIL import Image, ImageTk
-from pywmapi.common.enums import Language
 
 class ItemView(tk.Frame):
     def __init__(self, master: Misc) -> None:

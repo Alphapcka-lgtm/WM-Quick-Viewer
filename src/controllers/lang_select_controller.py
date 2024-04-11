@@ -1,5 +1,5 @@
 from views.lang_select_view import LangSelectView
-from models.warframe_market_model import WarframeMarketData
+from models import WarframeMarketData
 from pywmapi.common.enums import Language
 
 class LangSelectController:

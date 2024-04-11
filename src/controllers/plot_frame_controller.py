@@ -1,5 +1,4 @@
-from models.warframe_market_model import WarframeMarketData
-from models.market_item import MarketItem
+from models import WarframeMarketData, MarketItem
 from views.plot_frame import PlotFrame
 
 import matplotlib

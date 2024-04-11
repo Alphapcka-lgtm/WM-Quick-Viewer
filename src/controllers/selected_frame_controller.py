@@ -1,7 +1,6 @@
 from views.selected_frame import SelectedView, SelectedFrameTV
 from views.item_view import ItemView
-from models.warframe_market_model import WarframeMarketData
-from models.market_item import MarketItem
+from models import WarframeMarketData, MarketItem
 from utils.observable_dict import ObservableDict
 from controllers.item_view_controller import ItemViewController
 from controllers.plot_frame_controller import PlotFrameController

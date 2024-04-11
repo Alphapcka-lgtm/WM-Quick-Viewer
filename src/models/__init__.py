@@ -1,8 +1,13 @@
 import pywmapi
+from pywmapi.items.models import ItemShort
+from pywmapi.statistics.models import Statistic
+from pywmapi.orders.models import OrderRow
 from pywmapi.common.enums import Language
-from models.market_item import MarketItem
+
+import api_requester
 from typing import Callable
 from utils.observable_dict import ObservableDict
+
 
 class WarframeMarketData:
 
@@ -48,8 +53,8 @@ class WarframeMarketData:
         item = self.items_dict[item_id]
         item.quantity = quantity
         item.modifier = modifier
-        item.statistics = pywmapi.statistics.get_statistic(item.url_name)
-        item.orders = pywmapi.orders.get_orders(item.url_name)
+        item.statistics = api_requester.request_item_statistics(item.url_name)
+        item.orders = api_requester.request_item_orders(item.url_name)
         self.selected_items[item_id] = item
     
     def rmv_selected(self, item_id: str):
@@ -78,3 +83,40 @@ class WarframeMarketData:
                 items_dict[short_item.id].set_lang_name(lang, short_item.item_name)
         
         return items_dict
+    
+class MarketItem:
+    def __init__(self, item_short: ItemShort) -> None:
+        self.item_id = item_short.id
+        self.url_name = item_short.url_name
+        self.thumb = item_short.thumb
+        self.localized_item_names: ObservableDict[str, str] = ObservableDict()
+
+        self.quantity: int = 1
+        self.modifier: float = 1.0
+        self._statistics: Statistic = None
+        self._orders: list[OrderRow] = None
+
+    @property
+    def statistics(self):
+        return self._statistics
+    
+    @statistics.setter
+    def statistics(self, stats: Statistic):
+        self._statistics = stats
+
+    @property
+    def orders(self):
+        return self._orders
+    
+    @orders.setter
+    def orders(self, orders: list[OrderRow]):
+        self._orders = orders
+
+    def get_lang_name(self, lang: Language):
+        return self.localized_item_names.get(lang.value, None)
+
+    def set_lang_name(self, lang: Language, name: str):
+        self.localized_item_names[lang.value] = name
+    
+    def remove_lang_name(self, lang: Language):
+        self.localized_item_names.__delitem__(lang.value)
