@@ -5,6 +5,7 @@ from utils.observable_dict import ObservableDict
 from controllers.item_view_controller import ItemViewController
 from controllers.plot_frame_controller import PlotFrameController
 
+from pywmapi.common.enums import Language
 from pywmapi.statistics.models import Statistic
 from pywmapi.orders.models import OrderRow, OrderType, UserShort
 
@@ -61,6 +62,7 @@ class SelectedFrameTVController:
         self.frame = view
         self.model = model
         self.model.selected_items.add_listener(self._on_selected_changed)
+        self.model.add_lang_change_observer(self._on_lange_change)
 
         self._pf_ctrl: PlotFrameController = None
         self._item_thumbs: dict[str, tuple[tk.PhotoImage, MarketItem]] = {}
@@ -80,6 +82,11 @@ class SelectedFrameTVController:
     def _bind(self):
         self.frame.tv_selected_items.bind('<<TreeviewSelect>>', self._on_tv_item_selected)
         self.frame.btn_remove.config(command=self._rm_tv_item)
+
+    def _on_lange_change(self, lang: Language):
+        item_ids = self.frame.tv_selected_items.get_children()
+        for item_id in item_ids:
+            self.frame.tv_selected_items.item(item_id, text=self._item_thumbs[item_id][1].get_lang_name(lang))
     
     def _on_selected_changed(self, action: str, item_id: str, item: MarketItem):
         if action is ObservableDict.ITEM_DEL:
@@ -105,7 +112,15 @@ class SelectedFrameTVController:
             self._full_price += price_pq
         else:
             self._full_price -= price_pq
-        self.frame.lbl_complete_price.config(text=f'Full price: {self._full_price}')
+        
+        if self._full_price == 69:
+            self.frame.lbl_complete_price.config(text=f'Full price: {self._full_price} Platin (Nice ^^)')
+            return
+        if self._full_price == 420:
+            self.frame.lbl_complete_price.config(text=f'Full price: {self._full_price} Platin (▂▂⌇ )')
+            return
+        
+        self.frame.lbl_complete_price.config(text=f'Full price: {self._full_price} Platin')
 
     def _create_item_tumb(self, thumb: str):
         thumb_url = 'https://warframe.market/static/assets/' + thumb

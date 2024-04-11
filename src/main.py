@@ -12,7 +12,6 @@ from controllers.selected_frame_controller import SelectedFrameTVController
 from controllers.plot_frame_controller import PlotFrameController
 
 import tkinter as tk
-from tkinter import ttk
 
 def main():
     LANGS = {Language.en, Language.de}
@@ -27,29 +26,16 @@ def main():
     data = WarframeMarketData(LANGS)
     print('done')
     lang_frame = LangSelectView(app)
-    # lang_frame.config(highlightbackground='blue', highlightthickness=2, borderwidth=0)
     lang_frame_controller = LangSelectController(data, lang_frame)
-    # lang_frame.grid(column=0, row=0, sticky='WE', columnspan=2)
 
     select_frame = SelectFrame(app)
-    # select_frame.config(highlightbackground='red', highlightthickness=2, borderwidth=0)
-    # select_frame.config(width=50, height=50)
     select_frame_controller = SelectFrameController(data, select_frame)
-    # select_frame.grid(column=0, row=1, sticky='NWE')
 
-    # selected = SelectedView(app)
-    # selected.config(highlightbackground='green', highlightthickness=2, borderwidth=0)
-    # selected.config(width=50, height=50)
-    # selected_controller = SelectedViewController(selected, data)
-    # selected.grid(column=1, row=1, sticky='NWE')
     selected = SelectedFrameTV(app)
     selected_controller = SelectedFrameTVController(selected, data)
 
     plot_frame = PlotFrame(app)
-    # plot_frame.config(width=50, height=50)
-    # plot_frame.config(highlightbackground='yellow', highlightthickness=2, borderwidth=0)
     plotframe_controller = PlotFrameController(data, plot_frame)
-    # plot_frame.grid(column=0, row=2, sticky='WES', columnspan=2)
 
     selected_controller.plot_frame_controller = plotframe_controller
 
@@ -60,7 +46,7 @@ def main():
 
     lang_frame.grid(column=0, row=0, sticky='NSEW', columnspan=2)
     select_frame.grid(column=0, row=1, sticky='NSEW', pady=10)
-    selected.grid(column=1, row=1, sticky='NSEW', pady=10)
+    selected.grid(column=1, row=1, sticky='NSEW', pady=(0, 10), padx=(0, 10))
     plot_frame.grid(column=0, row=2, sticky='NSEW')
 
     app.columnconfigure(1, weight=1)
@@ -70,16 +56,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # origin = 'https://warframe.fandom.com'
-    # path = '/api.php'
-    # params = {
-	#     'action': "scribunto-console",
-	#     'format': "json",
-	#     'title': "Module:Void/data",
-	#     'content': "",
-	#     'question': 'local VoidData = require(\'Module:Void/data\').PrimeData local json = require(\'Module:JSON\') print(json.stringify(VoidData))',
-	#     'clear': '1'
-    # }
-    # query_string = urlencode(params)
-    # url = f"{origin}{path}?{query_string}"
-    # print(url)

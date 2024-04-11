@@ -25,6 +25,8 @@ class WarframeMarketData:
     
     @current_lang.setter
     def current_lang(self, lang: Language):
+        if self.current_lang.value == lang.value:
+            return
         self._current_lang = lang
         for callback in self._lang_change_observers:
             callback(self._current_lang)
