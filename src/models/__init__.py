@@ -121,3 +121,25 @@ class MarketItem:
     
     def remove_lang_name(self, lang: Language):
         self.localized_item_names.__delitem__(lang.value)
+
+class PrimesRelicData:
+
+    def __init__(self, wm_data: WarframeMarketData) -> None:
+        if not Language.en in wm_data.langs:
+            raise Exception('Data does not contain Language EN!')
+        
+        self.wm_data = wm_data
+        self.prime_data = self._get_primes_data()
+
+    def _get_primes_data(self) -> dict:
+        data = api_requester.request_prime_data()
+        # filter to only contain rewards that have ducat value
+        data = dict(filter(self._primes_data_filter, data.items()))
+        return data
+
+    def _primes_data_filter(self, pair):
+        item_name, dct = pair
+        for part_info in dct['parts'].values():
+            if part_info['DucatValue'] <= 0:
+                return False
+        return True
