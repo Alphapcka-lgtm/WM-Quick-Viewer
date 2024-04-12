@@ -3,7 +3,7 @@ from pywmapi.statistics.models import Statistic
 from pywmapi.orders.models import OrderRow
 from pywmapi.common.enums import Language
 
-import api_requester
+import models.api_requester as api_requester
 from typing import Callable
 from utils.observable_dict import ObservableDict
 

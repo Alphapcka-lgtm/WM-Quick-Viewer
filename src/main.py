@@ -4,6 +4,7 @@ from views.lang_select_view import LangSelectView
 from views.select_frame import SelectFrame
 from views.selected_frame import SelectedFrameTV
 from views.plot_frame import PlotFrame
+from views.primes_ducats import PrimesDuctasWindow
 from models import WarframeMarketData
 
 from controllers.lang_select_controller import LangSelectController
@@ -12,11 +13,14 @@ from controllers.selected_frame_controller import SelectedFrameTVController
 from controllers.plot_frame_controller import PlotFrameController
 
 import tkinter as tk
+from tkinter import ttk
+
+app = tk.Tk()
 
 def main():
     LANGS = {Language.en, Language.de}
 
-    app = tk.Tk()
+    
     app.title('WM Quickview')
     img = tk.PhotoImage(file='./warframe-market_icon.png')
     app.iconphoto(True, img)
@@ -49,10 +53,14 @@ def main():
     selected.grid(column=1, row=1, sticky='NSEW', pady=(0, 10), padx=(0, 10))
     plot_frame.grid(column=0, row=2, sticky='NSEW')
 
+    primes_ducats_btn = ttk.Button(app, text='Primes Ducats', command=lambda: PrimesDuctasWindow(app))
+    primes_ducats_btn.grid(column=0, row=3, sticky='NSEW')
+
     app.columnconfigure(1, weight=1)
     app.rowconfigure(1, weight=1)
 
     app.mainloop()
+
 
 if __name__ == '__main__':
     main()
