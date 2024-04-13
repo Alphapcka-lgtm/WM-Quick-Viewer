@@ -131,11 +131,27 @@ class PrimesRelicData:
         self.wm_data = wm_data
         self.prime_data = self._get_primes_data()
 
-    def _get_primes_data(self) -> dict:
+        self.names_sets = list(filter(lambda name: 'set' in name ,self.wm_data.item_names(Language.en)))
+
+    def primes_with_market_item(self) -> list[tuple['PrimeItem', MarketItem]]:
+        """Returns a list with pairs of PrimeItem and MarketItem"""
+        ret = []
+        for set_name in self.names_sets:
+            for index, prime_item in enumerate(self.prime_data):
+                if prime_item.name in set_name:
+                    item_id = self.wm_data.name_to_id(set_name, Language.en)
+                    ret.append((prime_item, self.wm_data.get_item(item_id)))
+                    # remove the item from the list since no item can/should appear twice in names_set
+                    del self.prime_data[index]
+                    break
+        return ret
+
+    def _get_primes_data(self) -> list['PrimeItem']:
         data = api_requester.request_prime_data()
         # filter to only contain rewards that have ducat value
         data = dict(filter(self._primes_data_filter, data.items()))
-        return data
+        primes_data = [PrimeItem(item_name, item_data['IsVaulted'], item_data['Parts']) for item_name, item_data in data.items()]
+        return primes_data
 
     def _primes_data_filter(self, pair):
         item_name, dct = pair
@@ -143,3 +159,23 @@ class PrimesRelicData:
             if part_info['DucatValue'] <= 0:
                 return False
         return True
+
+class PrimeItem:
+    def __init__(self, name: str, is_vaulted: bool, parts_data: dict[str, dict]) -> None:
+        self._name = name
+        self._is_vaulted = is_vaulted
+        self._parts_data = parts_data
+    
+    @property
+    def name(self) -> str:
+        return self._name
+    
+    @property
+    def is_vaulted(self) -> bool:
+        return self._is_vaulted
+    
+    def total_dacats_value(self) -> int:
+        ducat_value = 0
+        for part in self._parts_data.values():
+            ducat_value += part['DucatValue']
+        return ducat_value
