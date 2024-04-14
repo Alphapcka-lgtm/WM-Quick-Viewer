@@ -161,10 +161,11 @@ class PrimesRelicData:
         return True
 
 class PrimeItem:
-    def __init__(self, name: str, is_vaulted: bool, parts_data: dict[str, dict]) -> None:
+    def __init__(self, name: str, is_vaulted: bool, parts_data: dict[str, dict], item_id: str = None) -> None:
         self._name = name
         self._is_vaulted = is_vaulted
         self._parts_data = parts_data
+        self._item_id = item_id
     
     @property
     def name(self) -> str:
@@ -173,6 +174,14 @@ class PrimeItem:
     @property
     def is_vaulted(self) -> bool:
         return self._is_vaulted
+    
+    @property
+    def item_id(self) -> str:
+        return self._item_id
+    
+    @item_id.setter
+    def item_id(self, id: str):
+        self._item_id = id
     
     def total_dacats_value(self) -> int:
         ducat_value = 0
