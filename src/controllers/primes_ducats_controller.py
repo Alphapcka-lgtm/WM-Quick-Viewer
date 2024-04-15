@@ -17,7 +17,7 @@ class PrimesDuctasWindowController():
         for _, market_item in primes_marketItems:
             market_item.statistics = api_requester.request_item_statistics(market_item.url_name)
             market_item.orders = api_requester.request_item_orders(market_item.url_name)
-            pass
+        print('done requesting')
         primes_marketItems.sort(key=lambda x: x[0].total_dacats_value)
         pass
 
