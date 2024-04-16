@@ -1,11 +1,12 @@
 from pywmapi.items.models import ItemShort
 from pywmapi.statistics.models import Statistic
-from pywmapi.orders.models import OrderRow
-from pywmapi.common.enums import Language
+from pywmapi.orders.models import OrderRow, UserShort
+from pywmapi.common.enums import Language, OrderType
 
 import models.api_requester as api_requester
 from typing import Callable
 from utils.observable_dict import ObservableDict
+import statistics
 
 
 class WarframeMarketData:
@@ -112,6 +113,32 @@ class MarketItem:
     @orders.setter
     def orders(self, orders: list[OrderRow]):
         self._orders = orders
+
+    def calculate_price(self):
+        """
+        Calculates the price of the market item.
+        Returns a tuple with the median price for this item as a single quantatiy and the median price for the full quantaty set by order.
+        """
+        if self.statistics == None and self.orders == None:
+            raise AttributeError('Neither statistics nor orders available!')
+        stats = self.statistics
+        if stats.closed_48h == None or len(stats.closed_48h) == 0:
+            return self._price_from_orders(self.orders)
+        
+        return self._price_from_stats(stats)
+    
+    def _price_from_stats(self, stats: Statistic):
+        prices = list(map(lambda stat: stat.closed_price / stat.volume, stats.closed_48h))
+        price_po = round(statistics.median(prices))
+        price_pq = price_po * self.quantity
+        return price_po, price_pq
+
+    def _price_from_orders(self, orders: list[OrderRow]):
+        orders_filtered = list(filter(lambda order: order.order_type == OrderType.sell and order.user.status == UserShort.Status.ingame, orders))
+        prices = list(map(lambda order: order.platinum / order.quantity , orders_filtered))
+        price_po = round(statistics.median(prices))
+        price_pq = price_po * self.quantity
+        return price_po, price_pq
 
     def get_lang_name(self, lang: Language):
         return self.localized_item_names.get(lang.value, None)

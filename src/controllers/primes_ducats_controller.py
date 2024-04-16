@@ -4,22 +4,30 @@ import requests
 from io import BytesIO
 from PIL import Image, ImageTk
 from models import api_requester
+from tkinter import PhotoImage
 
-class PrimesDuctasWindowController():
+class PrimesDuctasWindowController:
     def __init__(self, data: WarframeMarketData, view: PrimesDuctasWindow) -> None:
         self._wm_data = data
         self._view = view
         self._pr_data = PrimesRelicData(self._wm_data)
+        self._ducats_plat_values = self._primes_ducats_values()
+        self._item_thumbs: dict[str, tuple[PhotoImage, MarketItem]] = {}
+        for prime, marketItem in self._ducats_plat_values:
+            img = self._create_item_tumb(marketItem.thumb)
+            self._view.tv_items.insert('', iid=marketItem.item_id, index='end')
     
     def _primes_ducats_values(self):
         primes_marketItems = self._pr_data.primes_with_market_item()
         print('requesting price data')
         for _, market_item in primes_marketItems:
-            market_item.statistics = api_requester.request_item_statistics(market_item.url_name)
-            market_item.orders = api_requester.request_item_orders(market_item.url_name)
+            if market_item.statistics is None:
+                market_item.statistics = api_requester.request_item_statistics(market_item.url_name)
+            if market_item.orders is None:
+                market_item.orders = api_requester.request_item_orders(market_item.url_name)
         print('done requesting')
-        primes_marketItems.sort(key=lambda x: x[0].total_dacats_value)
-        pass
+        primes_marketItems.sort(key=lambda x: x[0].total_dacats_value() / x[1].calculate_price()[0])
+        return primes_marketItems
 
     def _create_item_tumb(self, thumb: str):
         thumb_url = 'https://warframe.market/static/assets/' + thumb
