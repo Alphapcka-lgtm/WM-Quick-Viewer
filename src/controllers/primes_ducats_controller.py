@@ -12,10 +12,14 @@ class PrimesDuctasWindowController:
         self._view = view
         self._pr_data = PrimesRelicData(self._wm_data)
         self._ducats_plat_values = self._primes_ducats_values()
-        self._item_thumbs: dict[str, tuple[PhotoImage, MarketItem]] = {}
+        self._item_thumbs: dict[str, tuple[PhotoImage, tuple[PrimeItem, MarketItem]]] = {}
         for prime, marketItem in self._ducats_plat_values:
             img = self._create_item_tumb(marketItem.thumb)
-            self._view.tv_items.insert('', iid=marketItem.item_id, index='end')
+            price_po = marketItem.calculate_price()[0]
+            ducats = prime.total_dacats_value()
+            data = (f"{price_po} Platin", f"{ducats} Ducats", f"{ducats/price_po} d/p")
+            self._view.tv_items.insert('', iid=marketItem.item_id, index='end', image=img, text=marketItem.get_lang_name(Language.en), values=data)
+            self._item_thumbs[marketItem.item_id] = (img, marketItem)
     
     def _primes_ducats_values(self):
         primes_marketItems = self._pr_data.primes_with_market_item()

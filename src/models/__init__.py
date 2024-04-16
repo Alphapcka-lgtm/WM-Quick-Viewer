@@ -182,7 +182,7 @@ class PrimesRelicData:
 
     def _primes_data_filter(self, pair):
         item_name, dct = pair
-        for part_info in dct['parts'].values():
+        for part_info in dct['Parts'].values():
             if part_info['DucatValue'] <= 0:
                 return False
         return True

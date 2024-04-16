@@ -65,7 +65,7 @@ def main():
 
 def _btn_cmd():
     view = PrimesDuctasWindow(app)
-    ctrl = PrimesDuctasWindowController(data, app)
+    ctrl = PrimesDuctasWindowController(data, view)
 
 
 if __name__ == '__main__':
