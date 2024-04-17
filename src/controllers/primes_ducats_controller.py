@@ -30,7 +30,7 @@ class PrimesDuctasWindowController:
             if market_item.orders is None:
                 market_item.orders = api_requester.request_item_orders(market_item.url_name)
         print('done requesting')
-        primes_marketItems.sort(key=lambda x: x[0].total_dacats_value() / x[1].calculate_price()[0])
+        primes_marketItems.sort(key=lambda x: x[0].total_dacats_value() / x[1].calculate_price()[0], reverse=True)
         return primes_marketItems
 
     def _create_item_tumb(self, thumb: str):

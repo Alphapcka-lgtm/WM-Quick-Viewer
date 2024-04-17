@@ -157,8 +157,7 @@ class PrimesRelicData:
         
         self.wm_data = wm_data
         self.prime_data = self._get_primes_data()
-
-        self.names_sets = list(filter(lambda name: 'set' in name ,self.wm_data.item_names(Language.en)))
+        self.names_sets = list(filter(lambda name: 'set' in name.lower(), self.wm_data.item_names(Language.en)))
 
     def primes_with_market_item(self) -> list[tuple['PrimeItem', MarketItem]]:
         """Returns a list with pairs of PrimeItem and MarketItem"""
