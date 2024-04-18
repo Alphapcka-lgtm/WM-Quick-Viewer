@@ -162,14 +162,23 @@ class PrimesRelicData:
     def primes_with_market_item(self) -> list[tuple['PrimeItem', MarketItem]]:
         """Returns a list with pairs of PrimeItem and MarketItem"""
         ret = []
-        for set_name in self.names_sets:
-            for index, prime_item in enumerate(self.prime_data):
-                if prime_item.name in set_name:
-                    item_id = self.wm_data.name_to_id(set_name, Language.en)
+        wm_names = self.wm_data.item_names(Language.en)
+        for prime_item in self.prime_data:
+            for wm_name in wm_names:
+                if prime_item.name.lower() in wm_name.lower():
+                    item_id = self.wm_data.name_to_id(wm_name, Language.en)
+                    if item_id == None:
+                        raise NameError(f'item name {wm_name} not found with an id!')
                     ret.append((prime_item, self.wm_data.get_item(item_id)))
-                    # remove the item from the list since no item can/should appear twice in names_set
-                    del self.prime_data[index]
-                    break
+
+        # for set_name in self.names_sets:
+        #     for index, prime_item in enumerate(self.prime_data):
+        #         if prime_item.name in set_name:
+        #             item_id = self.wm_data.name_to_id(set_name, Language.en)
+        #             ret.append((prime_item, self.wm_data.get_item(item_id)))
+        #             # remove the item from the list since no item can/should appear twice in names_set
+        #             del self.prime_data[index]
+        #             break
         return ret
 
     def _get_primes_data(self) -> list['PrimeItem']:
